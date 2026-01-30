@@ -1,13 +1,15 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import { createGateway, generateText, Output, streamText } from "ai";
+import { createGateway, generateText, streamText } from "ai";
 import { createOllama } from "ai-sdk-ollama";
 import { match } from "ts-pattern";
 import z, { flattenError, ZodError } from "zod";
 import { createZhipu } from "zhipu-ai-provider";
 import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system.md?raw";
 import docxParserUserPrompt from "@/integrations/ai/prompts/docx-parser-user.md?raw";
+import markdownParserSystemPrompt from "@/integrations/ai/prompts/markdown-parser-system.md?raw";
+import markdownParserUserPrompt from "@/integrations/ai/prompts/markdown-parser-user.md?raw";
 import pdfParserSystemPrompt from "@/integrations/ai/prompts/pdf-parser-system.md?raw";
 import pdfParserUserPrompt from "@/integrations/ai/prompts/pdf-parser-user.md?raw";
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
@@ -50,6 +52,14 @@ const fileInputSchema = z.object({
 	data: z.string(), // base64 encoded
 });
 
+// Helper function to parse AI response JSON
+function parseAIResponse(text: string): Record<string, unknown> {
+	const jsonText = text.trim();
+	// Remove markdown code blocks if present
+	const cleanJson = jsonText.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "");
+	return JSON.parse(cleanJson) as Record<string, unknown>;
+}
+
 export const aiRouter = {
 	testConnection: protectedProcedure
 		.input(
@@ -84,7 +94,6 @@ export const aiRouter = {
 				const result = await generateText({
 					model,
 					maxRetries: 0,
-					output: Output.object({ schema: resumeDataSchema }),
 					messages: [
 						{
 							role: "system",
@@ -105,8 +114,10 @@ export const aiRouter = {
 					],
 				});
 
+				const parsed = parseAIResponse(result.text);
+
 				return resumeDataSchema.parse({
-					...result.output,
+					...parsed,
 					customSections: [],
 					picture: defaultResumeData.picture,
 					metadata: defaultResumeData.metadata,
@@ -115,6 +126,10 @@ export const aiRouter = {
 				if (error instanceof ZodError) {
 					const errors = flattenError(error);
 					throw new Error(JSON.stringify(errors));
+				}
+
+				if (error instanceof SyntaxError) {
+					throw new Error("AI 返回的 JSON 格式无效，请重试");
 				}
 
 				throw error;
@@ -139,7 +154,6 @@ export const aiRouter = {
 				const result = await generateText({
 					model,
 					maxRetries: 0,
-					output: Output.object({ schema: resumeDataSchema }),
 					messages: [
 						{ role: "system", content: docxParserSystemPrompt },
 						{
@@ -157,8 +171,10 @@ export const aiRouter = {
 					],
 				});
 
+				const parsed = parseAIResponse(result.text);
+
 				return resumeDataSchema.parse({
-					...result.output,
+					...parsed,
 					customSections: [],
 					picture: defaultResumeData.picture,
 					metadata: defaultResumeData.metadata,
@@ -167,6 +183,55 @@ export const aiRouter = {
 				if (error instanceof ZodError) {
 					const errors = flattenError(error);
 					throw new Error(JSON.stringify(errors));
+				}
+
+				if (error instanceof SyntaxError) {
+					throw new Error("AI 返回的 JSON 格式无效，请重试");
+				}
+
+				throw error;
+			}
+		}),
+
+	parseMarkdown: protectedProcedure
+		.input(
+			z.object({
+				...aiCredentialsSchema.shape,
+				content: z.string(),
+			}),
+		)
+		.handler(async ({ input }) => {
+			try {
+				const model = getModel(input);
+
+				const result = await generateText({
+					model,
+					maxRetries: 0,
+					messages: [
+						{ role: "system", content: markdownParserSystemPrompt },
+						{
+							role: "user",
+							content: `${markdownParserUserPrompt}\n\n---\n\n${input.content}`,
+						},
+					],
+				});
+
+				const parsed = parseAIResponse(result.text);
+
+				return resumeDataSchema.parse({
+					...parsed,
+					customSections: [],
+					picture: defaultResumeData.picture,
+					metadata: defaultResumeData.metadata,
+				});
+			} catch (error) {
+				if (error instanceof ZodError) {
+					const errors = flattenError(error);
+					throw new Error(JSON.stringify(errors));
+				}
+
+				if (error instanceof SyntaxError) {
+					throw new Error("AI 返回的 JSON 格式无效，请重试");
 				}
 
 				throw error;

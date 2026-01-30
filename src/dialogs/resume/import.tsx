@@ -41,6 +41,15 @@ const formSchema = z.discriminatedUnion("type", [
 			),
 	}),
 	z.object({
+		type: z.literal("markdown"),
+		file: z
+			.instanceof(File)
+			.refine(
+				(file) => file.type === "text/markdown" || file.name.endsWith(".md") || file.name.endsWith(".markdown"),
+				{ message: "File must be a Markdown file" },
+			),
+	}),
+	z.object({
 		type: z.literal("reactive-resume-json"),
 		file: z
 			.instanceof(File)
@@ -128,6 +137,21 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				data = importer.parse(json);
 			}
 
+			if (values.type === "markdown") {
+				if (!isAIEnabled)
+					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
+
+				const content = await values.file.text();
+
+				data = await client.ai.parseMarkdown({
+					provider,
+					model,
+					apiKey,
+					baseURL,
+					content,
+				});
+			}
+
 			if (values.type === "pdf") {
 				if (!isAIEnabled)
 					throw new Error(t`This feature requires AI Integration to be enabled. Please enable it in the settings.`);
@@ -191,7 +215,8 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 				<DialogDescription>
 					<Trans>
 						Continue where you left off by importing an existing resume you created using Reactive Resume or any another
-						resume builder. Supported formats include PDF, Microsoft Word, as well as JSON files from Reactive Resume.
+						resume builder. Supported formats include PDF, Microsoft Word, Markdown, as well as JSON files from Reactive
+						Resume.
 					</Trans>
 				</DialogDescription>
 			</DialogHeader>
@@ -215,6 +240,14 @@ export function ImportResumeDialog(_: DialogProps<"resume.import">) {
 											{ value: "reactive-resume-json", label: "Reactive Resume (JSON)" },
 											{ value: "reactive-resume-v4-json", label: "Reactive Resume v4 (JSON)" },
 											{ value: "json-resume-json", label: "JSON Resume" },
+											{
+												value: "markdown",
+												label: (
+													<div className="flex items-center gap-x-2">
+														Markdown <Badge>{t`AI`}</Badge>
+													</div>
+												),
+											},
 											{
 												value: "pdf",
 												label: (
