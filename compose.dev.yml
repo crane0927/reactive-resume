@@ -1,38 +1,29 @@
 name: reactive_resume
 
 services:
-  adminer:
-    image: adminer:latest
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      start_period: 10s
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # 使用本机已有的 PostgreSQL，不再启动 Docker 中的 postgres
+  # adminer:
+  #   image: adminer:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
 
-  postgres:
-    image: postgres:latest
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
-      start_period: 10s
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # postgres:
+  #   image: postgres:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: postgres
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
 
   browserless:
     image: ghcr.io/browserless/chromium:latest
@@ -109,5 +100,5 @@ services:
 
 volumes:
   mailpit_data:
-  postgres_data:
+  # postgres_data:  # 使用本机 PostgreSQL，不需要此 volume
   seaweedfs_data:
