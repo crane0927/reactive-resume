@@ -737,6 +737,7 @@ msgstr "Zona Berbahaya"
 msgid "Danish"
 msgstr "Denmark"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "Tingkat {level} dari 5"
 msgid "Licensed under <0>MIT</0>."
 msgstr "Berlisensi di bawah <0>MIT</0>."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "Swedia"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "Beralih ke tema gelap"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "Beralih ke tema terang"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "Perkecil"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

@@ -737,6 +737,7 @@ msgstr "ಅಪಾಯ ವಲಯ"
 msgid "Danish"
 msgstr "ಡ್ಯಾನಿಶ್"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "5 ರಲ್ಲಿ {level} ನೇ ಮಟ್ಟ"
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT</0> ಅಡಿಯಲ್ಲಿ ಪರವಾನಗಿ ಪಡೆದಿದೆ."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "ಸ್ವೀಡಿಷ್"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "ಡಾರ್ಕ್ ಥೀಮ್‌ಗೆ ಬದಲಾಯಿಸಿ"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "ಲೈಟ್ ಥೀಮ್‌ಗೆ ಬದಲಾಯಿಸಿ"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "ಗಾತ್ರ ಕುಗ್ಗಿಸಿ"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "ಜೂಲೂ"
-

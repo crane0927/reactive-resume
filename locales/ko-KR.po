@@ -737,6 +737,7 @@ msgstr "위험 구역"
 msgid "Danish"
 msgstr "덴마크어"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "5점 만점에 {level}점"
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT</0> 라이선스로 배포됩니다."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "스웨덴어"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "다크 테마로 전환"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "라이트 테마로 전환"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "축소"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "줄루어"
-

@@ -737,6 +737,7 @@ msgstr "Zone dangereuse"
 msgid "Danish"
 msgstr "Danois"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "Niveau {level} sur 5"
 msgid "Licensed under <0>MIT</0>."
 msgstr "Sous licence <0>MIT</0>."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "Suédois"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "Basculer en mode sombre"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "Basculer en mode clair"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "Zoom arrière"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zoulou"
-

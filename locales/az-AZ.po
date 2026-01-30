@@ -737,6 +737,7 @@ msgstr "Təhlükəli Zona"
 msgid "Danish"
 msgstr "Danimarka"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "5 üzərindən {level} səviyyə"
 msgid "Licensed under <0>MIT</0>."
 msgstr "<0>MIT</0> lisenziyası ilə."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "İsveç"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "Tünd mövzuya keç"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "Açıq mövzuya keç"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "Uzaqlaşdır"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

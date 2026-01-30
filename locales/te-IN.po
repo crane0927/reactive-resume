@@ -737,6 +737,7 @@ msgstr "డేంజర్ జోన్"
 msgid "Danish"
 msgstr "డానిష్"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "5లో {level} స్థాయి"
 msgid "Licensed under <0>MIT</0>."
 msgstr "లైసెన్సు పొందినది <0>MIT</0>."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "స్వీడిష్"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "డార్క్ మోడ్‌కి స్విచ్ చేయండి"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "లైట్ మోడ్కి స్విచ్ చేయండి"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "జూమ్ అవుట్ చేయండి"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "జులు"
-

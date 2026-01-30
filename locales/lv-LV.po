@@ -737,6 +737,7 @@ msgstr "Bīstamā zona"
 msgid "Danish"
 msgstr "Dāņu"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "Līmenis {level} no 5"
 msgid "Licensed under <0>MIT</0>."
 msgstr "Licencēts ar <0>MIT</0>."
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "Zviedru"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "Pārslēgt uz tumšo tēmu"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "Pārslēgt uz gaišo tēmu"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "Tālināt"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

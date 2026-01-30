@@ -737,6 +737,7 @@ msgstr "តំបន់​គ្រោះថ្នាក់"
 msgid "Danish"
 msgstr "Danish"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Dark"
@@ -1418,6 +1419,7 @@ msgstr "កម្រិត {level} ក្នុងចំណោម ៥"
 msgid "Licensed under <0>MIT</0>."
 msgstr "មាន​អាជ្ញាប័ណ្ណ​ក្រោម <0>MIT</0>។"
 
+#: src/components/theme/toggle-button.tsx
 #: src/components/user/dropdown-menu.tsx
 #: src/utils/theme.ts
 msgid "Light"
@@ -2198,12 +2200,13 @@ msgid "Swedish"
 msgstr "Swedish"
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to dark theme"
-msgstr "ប្តូរ​ទៅ​ស្បែកងងឹត"
+msgid "Switch theme"
+msgstr ""
 
 #: src/components/theme/toggle-button.tsx
-msgid "Switch to light theme"
-msgstr "ប្តូរ​ទៅ​ស្បែកភ្លឺ"
+#: src/utils/theme.ts
+msgid "System"
+msgstr ""
 
 #: src/components/input/rich-input.tsx
 msgid "Table"
@@ -2786,4 +2789,3 @@ msgstr "បង្រួម"
 #: src/utils/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-
