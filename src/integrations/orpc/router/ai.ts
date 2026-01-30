@@ -5,6 +5,7 @@ import { createGateway, generateText, Output, streamText } from "ai";
 import { createOllama } from "ai-sdk-ollama";
 import { match } from "ts-pattern";
 import z, { flattenError, ZodError } from "zod";
+import { createZhipu } from "zhipu-ai-provider";
 import docxParserSystemPrompt from "@/integrations/ai/prompts/docx-parser-system.md?raw";
 import docxParserUserPrompt from "@/integrations/ai/prompts/docx-parser-user.md?raw";
 import pdfParserSystemPrompt from "@/integrations/ai/prompts/pdf-parser-system.md?raw";
@@ -12,7 +13,7 @@ import pdfParserUserPrompt from "@/integrations/ai/prompts/pdf-parser-user.md?ra
 import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { protectedProcedure } from "../context";
 
-const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway"]);
+const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway", "zhipu"]);
 
 type AIProvider = z.infer<typeof aiProviderSchema>;
 
@@ -33,6 +34,7 @@ function getModel(input: GetModelInput) {
 		.with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
 		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
 		.with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
+		.with("zhipu", () => createZhipu({ apiKey, baseURL: baseURL || undefined })(model))
 		.exhaustive();
 }
 

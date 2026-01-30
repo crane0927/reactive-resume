@@ -24,6 +24,12 @@ export const Route = createFileRoute("/dashboard/settings/ai")({
 
 const providerOptions: (ComboboxOption<AIProvider> & { defaultBaseURL: string })[] = [
 	{
+		value: "zhipu",
+		label: "智谱 AI (GLM)",
+		keywords: ["zhipu", "glm", "bigmodel", "智谱", "清华"],
+		defaultBaseURL: "https://open.bigmodel.cn/api/paas/v4",
+	},
+	{
 		value: "openai",
 		label: "OpenAI",
 		keywords: ["openai", "gpt", "chatgpt"],
