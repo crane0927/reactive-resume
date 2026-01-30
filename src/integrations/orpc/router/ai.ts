@@ -12,7 +12,7 @@ import markdownParserSystemPrompt from "@/integrations/ai/prompts/markdown-parse
 import markdownParserUserPrompt from "@/integrations/ai/prompts/markdown-parser-user.md?raw";
 import pdfParserSystemPrompt from "@/integrations/ai/prompts/pdf-parser-system.md?raw";
 import pdfParserUserPrompt from "@/integrations/ai/prompts/pdf-parser-user.md?raw";
-import { defaultResumeData, resumeDataSchema } from "@/schema/resume/data";
+import { defaultResumeData, type ResumeData, resumeDataSchema } from "@/schema/resume/data";
 import { protectedProcedure } from "../context";
 
 const aiProviderSchema = z.enum(["ollama", "openai", "gemini", "anthropic", "vercel-ai-gateway", "zhipu"]);
@@ -58,6 +58,147 @@ function parseAIResponse(text: string): Record<string, unknown> {
 	// Remove markdown code blocks if present
 	const cleanJson = jsonText.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "");
 	return JSON.parse(cleanJson) as Record<string, unknown>;
+}
+
+type DeepObject = Record<string, unknown>;
+
+// Deep merge function - recursively merge source into target, preserving target values when source is undefined
+function deepMerge(target: DeepObject, source: DeepObject): DeepObject {
+	const result: DeepObject = {};
+
+	// First copy all keys from target
+	for (const key of Object.keys(target)) {
+		result[key] = target[key];
+	}
+
+	// Then merge source into result
+	for (const key of Object.keys(source)) {
+		const sourceValue = source[key];
+		const targetValue = result[key];
+
+		if (sourceValue === undefined || sourceValue === null) {
+			// Keep target value
+			continue;
+		}
+
+		if (Array.isArray(sourceValue)) {
+			// For arrays with items, merge each item with default item structure if available
+			if (sourceValue.length > 0) {
+				result[key] = sourceValue;
+			}
+			// Keep target (empty array) if source is empty
+		} else if (typeof sourceValue === "object" && sourceValue !== null) {
+			if (typeof targetValue === "object" && targetValue !== null && !Array.isArray(targetValue)) {
+				// Recursively merge nested objects
+				result[key] = deepMerge(targetValue as DeepObject, sourceValue as DeepObject);
+			} else {
+				result[key] = sourceValue;
+			}
+		} else {
+			// For primitives, use source value
+			result[key] = sourceValue;
+		}
+	}
+
+	return result;
+}
+
+// Ensure all section items have required fields
+function ensureSectionItems(sections: DeepObject): DeepObject {
+	const defaultSection = {
+		title: "",
+		columns: 1,
+		hidden: false,
+		items: [],
+	};
+
+	const sectionKeys = [
+		"profiles",
+		"experience",
+		"education",
+		"projects",
+		"skills",
+		"languages",
+		"interests",
+		"awards",
+		"certifications",
+		"publications",
+		"volunteer",
+		"references",
+	];
+
+	const result: DeepObject = {};
+
+	for (const key of sectionKeys) {
+		const sectionData = sections[key];
+		if (sectionData && typeof sectionData === "object" && !Array.isArray(sectionData)) {
+			result[key] = {
+				...defaultSection,
+				...(sectionData as DeepObject),
+			};
+		} else {
+			result[key] = { ...defaultSection };
+		}
+	}
+
+	return result;
+}
+
+// Merge AI response with default resume data
+function mergeWithDefaults(parsed: DeepObject): ResumeData {
+	// Log the parsed data for debugging
+	console.log("AI Response (parsed):", JSON.stringify(parsed, null, 2).substring(0, 2000));
+
+	// Ensure basics has all required fields
+	const defaultBasics = {
+		name: "",
+		headline: "",
+		email: "",
+		phone: "",
+		location: "",
+		website: { url: "", label: "" },
+		customFields: [],
+	};
+
+	const parsedBasics = (parsed.basics as DeepObject) || {};
+	const basics = { ...defaultBasics, ...parsedBasics };
+
+	// Handle website field specially
+	if (basics.website && typeof basics.website === "object") {
+		basics.website = {
+			url: (basics.website as DeepObject).url || "",
+			label: (basics.website as DeepObject).label || "",
+		};
+	} else {
+		basics.website = { url: "", label: "" };
+	}
+
+	// Ensure summary has all required fields
+	const defaultSummary = {
+		title: "",
+		columns: 1,
+		hidden: false,
+		content: "",
+	};
+	const parsedSummary = (parsed.summary as DeepObject) || {};
+	const summary = { ...defaultSummary, ...parsedSummary };
+
+	// Ensure sections has all required fields
+	const parsedSections = (parsed.sections as DeepObject) || {};
+	const sections = ensureSectionItems(parsedSections);
+
+	const merged: DeepObject = {
+		basics,
+		summary,
+		sections,
+		customSections: [],
+		picture: defaultResumeData.picture,
+		metadata: defaultResumeData.metadata,
+	};
+
+	console.log("Merged data:", JSON.stringify(merged, null, 2).substring(0, 2000));
+
+	return resumeDataSchema.parse(merged);
 }
 
 export const aiRouter = {
@@ -115,13 +256,7 @@ export const aiRouter = {
 				});
 
 				const parsed = parseAIResponse(result.text);
-
-				return resumeDataSchema.parse({
-					...parsed,
-					customSections: [],
-					picture: defaultResumeData.picture,
-					metadata: defaultResumeData.metadata,
-				});
+				return mergeWithDefaults(parsed);
 			} catch (error) {
 				if (error instanceof ZodError) {
 					const errors = flattenError(error);
@@ -172,13 +307,7 @@ export const aiRouter = {
 				});
 
 				const parsed = parseAIResponse(result.text);
-
-				return resumeDataSchema.parse({
-					...parsed,
-					customSections: [],
-					picture: defaultResumeData.picture,
-					metadata: defaultResumeData.metadata,
-				});
+				return mergeWithDefaults(parsed);
 			} catch (error) {
 				if (error instanceof ZodError) {
 					const errors = flattenError(error);
@@ -216,15 +345,13 @@ export const aiRouter = {
 					],
 				});
 
-				const parsed = parseAIResponse(result.text);
+				console.log("AI Raw Response:", result.text.substring(0, 2000));
 
-				return resumeDataSchema.parse({
-					...parsed,
-					customSections: [],
-					picture: defaultResumeData.picture,
-					metadata: defaultResumeData.metadata,
-				});
+				const parsed = parseAIResponse(result.text);
+				return mergeWithDefaults(parsed);
 			} catch (error) {
+				console.error("Parse Markdown Error:", error);
+
 				if (error instanceof ZodError) {
 					const errors = flattenError(error);
 					throw new Error(JSON.stringify(errors));
